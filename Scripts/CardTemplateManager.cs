@@ -56,6 +56,9 @@ public class CardTemplateManager : MonoBehaviour
         Debug.Log(index);
         switch(index)
         {
+            case 0:
+                SceneManager.LoadScene("VideoGreetingCard");
+                break;
             case 1:
                 SceneManager.LoadScene("WeddingCardDetails");
                 break;

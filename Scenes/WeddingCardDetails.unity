@@ -177,7 +177,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 125e874efaaeb3c4f9d2b0f39e5de123, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  warningPanel: {fileID: 26300878}
 --- !u!114 &26300881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -702,7 +701,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 257545640}
   playPauseIcon: {fileID: 1097891507}
-  videoToPlay: {fileID: 32900000, guid: d325c4a5a57f2ee4cab307eee30ae7d1, type: 3}
+  videoToPlay: {fileID: 0}
 --- !u!114 &257545643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1378,7 +1377,7 @@ GameObject:
   - component: {fileID: 817493745}
   - component: {fileID: 817493744}
   m_Layer: 5
-  m_Name: LibraryPage
+  m_Name: WeddingCardPage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1420,7 +1419,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 125e874efaaeb3c4f9d2b0f39e5de123, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  warningPanel: {fileID: 26300878}
 --- !u!114 &817493745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2968,7 +2966,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 125e874efaaeb3c4f9d2b0f39e5de123, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  warningPanel: {fileID: 0}
 --- !u!114 &1732348848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3254,7 +3251,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 125e874efaaeb3c4f9d2b0f39e5de123, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  warningPanel: {fileID: 26300878}
 --- !u!114 &1897362182
 MonoBehaviour:
   m_ObjectHideFlags: 0
