@@ -359,6 +359,76 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 573096188}
   m_CullTransparentMesh: 1
+--- !u!1 &616970810
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 616970812}
+  - component: {fileID: 616970811}
+  m_Layer: 5
+  m_Name: Video Player
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!328 &616970811
+VideoPlayer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616970810}
+  m_Enabled: 1
+  m_VideoClip: {fileID: 32900000, guid: d325c4a5a57f2ee4cab307eee30ae7d1, type: 3}
+  m_TargetCameraAlpha: 1
+  m_TargetCamera3DLayout: 0
+  m_TargetCamera: {fileID: 0}
+  m_TargetTexture: {fileID: 0}
+  m_TimeReference: 0
+  m_TargetMaterialRenderer: {fileID: 0}
+  m_TargetMaterialProperty: <noninit>
+  m_RenderMode: 2
+  m_AspectRatio: 2
+  m_DataSource: 0
+  m_PlaybackSpeed: 1
+  m_AudioOutputMode: 2
+  m_TargetAudioSources: []
+  m_DirectAudioVolumes: []
+  m_Url: 
+  m_EnabledAudioTracks: 
+  m_DirectAudioMutes: 
+  m_ControlledAudioTrackCount: 0
+  m_PlayOnAwake: 1
+  m_SkipOnDrop: 1
+  m_Looping: 0
+  m_WaitForFirstFrame: 1
+  m_FrameReadyEventEnabled: 0
+  m_VideoShaders: []
+--- !u!224 &616970812
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616970810}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 889124978}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -45, y: 142}
+  m_SizeDelta: {x: 620.0894, y: 446.7262}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &639116599
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,9 +513,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2099113257}
-        m_TargetAssemblyTypeName: QRCodeGenerator, Assembly-CSharp
-        m_MethodName: OnClickEncode
+      - m_Target: {fileID: 850946294}
+        m_TargetAssemblyTypeName: VideoGreetingCard, Assembly-CSharp
+        m_MethodName: uploadFile
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -587,6 +657,51 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &850946293
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 850946295}
+  - component: {fileID: 850946294}
+  m_Layer: 0
+  m_Name: videotestupload
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &850946294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850946293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf5f8c610c00b4f4c9069730b9b925a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  video: {fileID: 616970811}
+--- !u!4 &850946295
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850946293}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 458.3156, y: 825.4858, z: 2.295594}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &889124977
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,6 +734,7 @@ RectTransform:
   m_Children:
   - {fileID: 639116600}
   - {fileID: 1718053008}
+  - {fileID: 616970812}
   m_Father: {fileID: 231460768}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -735,8 +851,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -27.397, y: 225.6616}
-  m_SizeDelta: {x: 952.2966, y: 983.8666}
+  m_AnchoredPosition: {x: -72, y: 727}
+  m_SizeDelta: {x: 831.4677, y: 285.1606}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1761660259
 GameObject:
@@ -918,8 +1034,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab4568a031393014aa68e5fd4f7cddcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rawImageContent: {fileID: 1718053006}
-  backgroundImage: {fileID: 2800000, guid: 7646b3e2ef718324b87a19078edfe5ee, type: 3}
 --- !u!4 &2099113258
 Transform:
   m_ObjectHideFlags: 0

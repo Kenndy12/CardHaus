@@ -41,13 +41,21 @@ public class VideoAR : MonoBehaviour
     {
         videoCode = videoCodeField.text;
 
+        
         var filter = Builders<BsonDocument>.Filter.Eq("_id", ObjectId.Parse(videoCode));
         Debug.Log(filter);
         if (filter != null)
         {
             var result = collection.Find(filter).FirstOrDefault().GetValue("videoURL");
-            Debug.Log(result.ToString());
-            videoLink = "https://unity-youtube-dl-server.herokuapp.com/" + result.ToString();
+            if (result == null)
+            {
+                Debug.Log("Invalid video code");
+            }
+            else
+            {
+                Debug.Log(result.ToString());
+                videoLink = "https://unity-youtube-dl-server.herokuapp.com/" + result.ToString();
+            }
         }
         else
         {
