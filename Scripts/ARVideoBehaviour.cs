@@ -50,12 +50,20 @@ public class ARVideoBehaviour : MonoBehaviour
 
     const float LERP_DURATION = 0.3f;
 
-    public VideoPlayer videoPlayer;
+    private VideoPlayer videoPlayer;
+    public GameObject plane;
 
     PoseSmoother mPoseSmoother;
 
+    private GameObject videoArObject;
+    private VideoAR videoARScript;
+
+    private string videoLink;
+
     protected virtual void Start()
     {
+        videoArObject = GameObject.Find("VideoAR");
+
         mObserverBehaviour = GetComponent<ObserverBehaviour>();
 
         if (mObserverBehaviour)
@@ -65,6 +73,16 @@ public class ARVideoBehaviour : MonoBehaviour
 
             OnObserverStatusChanged(mObserverBehaviour, mObserverBehaviour.TargetStatus);
             SetupPoseSmoothing();
+        }
+    }
+
+    protected virtual void Update()
+    {
+        bool checkIfSourceChanged = isSourceChanged();
+
+        if(checkIfSourceChanged)
+        {
+            StartCoroutine(playVideo());
         }
     }
 
@@ -110,11 +128,12 @@ public class ARVideoBehaviour : MonoBehaviour
         {
             if (shouldBeRendererNow)
             {
-                StartCoroutine(playVideo());
+                videoPlayer.Play();           
                 OnTrackingFound();
             }
             else
             {
+                videoPlayer.Pause();
                 OnTrackingLost();
             }
         }
@@ -334,15 +353,17 @@ public class ARVideoBehaviour : MonoBehaviour
     IEnumerator playVideo()
     {
         //Add VideoPlayer to the GameObject
-        videoPlayer = gameObject.GetComponent<VideoPlayer>();
+        videoPlayer = plane.AddComponent<VideoPlayer>();
 
         //Disable Play on Awake for both Video and Audio
-        videoPlayer.playOnAwake = true;
+        videoPlayer.playOnAwake = false;
 
-
+        videoARScript = videoArObject.GetComponent<VideoAR>();
+        string theLink = videoARScript.passVideoLink();
+        Debug.Log(theLink);
         // Vide clip from Url
         videoPlayer.source = VideoSource.Url;
-        videoPlayer.url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+        videoPlayer.url = videoLink;
 
 
         //Set video To Play then prepare Audio to prevent Buffering
@@ -356,8 +377,6 @@ public class ARVideoBehaviour : MonoBehaviour
         }
 
         Debug.Log("Done Preparing Video");
-        //Play Video
-        videoPlayer.Play();
 
         Debug.Log("Playing Video");
         while (videoPlayer.isPlaying)
@@ -366,5 +385,21 @@ public class ARVideoBehaviour : MonoBehaviour
         }
 
         Debug.Log("Done Playing Video");
+    }
+
+    private Boolean isSourceChanged()
+    {
+        videoARScript = videoArObject.GetComponent<VideoAR>();
+        string theLink = videoARScript.passVideoLink();
+
+        if(videoLink != theLink)
+        {
+            videoLink = theLink;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
