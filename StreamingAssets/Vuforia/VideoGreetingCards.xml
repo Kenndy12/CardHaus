@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
   <Tracking>
-    <ImageTarget name="birthdaywithouttext" size="20.000000 26.666666" />
-    <ImageTarget name="test" size="5.000000 3.697318" />
-    <ImageTarget name="VideoGreetingTemplate1" size="20.000000 15.994065" />
+    <ImageTarget name="BirthdayGreetingCard" size="10.000000 13.333333" />
   </Tracking>
 </QCARConfig>

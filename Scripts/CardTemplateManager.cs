@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
 using TMPro;
+using Firebase;
+using Firebase.Auth;
 
 
 public static class ButtonExtension
@@ -20,6 +22,8 @@ public static class ButtonExtension
 
 public class CardTemplateManager : MonoBehaviour
 {
+    public GameObject warningPanel;
+
     [Serializable]
     public struct cardTemplate
     {
@@ -57,7 +61,15 @@ public class CardTemplateManager : MonoBehaviour
         switch(index)
         {
             case 0:
-                SceneManager.LoadScene("VideoGreetingCard");
+                if (checkLoggedIn())
+                {
+                    Debug.Log(FirebaseAuth.DefaultInstance.CurrentUser.DisplayName);
+                    SceneManager.LoadScene("VideoGreetingCard");
+                }
+                else
+                {
+                    callWarningPanel();
+                }                             
                 break;
             case 1:
                 SceneManager.LoadScene("WeddingCardDetails");
@@ -65,9 +77,16 @@ public class CardTemplateManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    private bool checkLoggedIn()
     {
-        
+        if (FirebaseAuth.DefaultInstance.CurrentUser.DisplayName == "")
+            return false;
+        else
+            return true;
+    }
+
+    private void callWarningPanel()
+    {
+        warningPanel.SetActive(true);
     }
 }

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+
 
 using UnityEditor;
 using UnityEngine;
@@ -12,6 +14,7 @@ using System.IO;
 using Firebase;
 using Firebase.Extensions;
 using Firebase.Storage;
+using Firebase.Auth;
 
 using MongoDB.Driver;
 using MongoDB.Bson;
@@ -35,6 +38,8 @@ public class UploadVideoScript : MonoBehaviour
     public static string downloadLink;
 
     byte[] videoBytes;
+
+    public FirebaseUser user;
 
     // Start is called before the first frame update
     void Start()
@@ -98,20 +103,22 @@ public class UploadVideoScript : MonoBehaviour
 
     public async void  uploadFile()
     {
-        tempRef = storageRef.Child("test2.mp4");
+        var todayDate = DateTime.Today;
+        string strToday = todayDate.ToString();
+        strToday.Replace("/", "-");
+        string videoID = FirebaseAuth.DefaultInstance.CurrentUser.DisplayName + "/" + strToday + ".mp4";
+        tempRef = storageRef.Child(videoID);
         var newMetadata = new MetadataChange();
         newMetadata.ContentType = "video/mp4";
 
         await tempRef.PutBytesAsync(videoBytes, newMetadata).ContinueWithOnMainThread((task) => {
             if (task.IsFaulted || task.IsCanceled)
-            {
-                string error = task.Exception.ToString();
+            {   
                 Debug.Log(task.Result);
                 Debug.Log(task.Exception.ToString());
             }
             else
             {
-                string error = "success";
                 Debug.Log(task.Result);
                 Debug.Log("File Uploaded Successfully!");
             }
@@ -135,4 +142,5 @@ public class UploadVideoScript : MonoBehaviour
     {
         return downloadLink;
     }
+
 }

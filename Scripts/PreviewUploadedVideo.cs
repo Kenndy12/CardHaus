@@ -1,8 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using UnityEngine.SceneManagement;
+
+using TMPro;
+
+using MongoDB.Driver;
+using MongoDB.Bson;
 
 public class PreviewUploadedVideo : MonoBehaviour
 {
@@ -15,12 +23,48 @@ public class PreviewUploadedVideo : MonoBehaviour
     private bool firstRun = true;
 
     private string videoLink;
+    private string videoCode;
 
+    public TMP_Text videoCodeText;
+
+    MongoClient client = new MongoClient("mongodb+srv://CardHaus:cardHaus321@cardhauscluster.lznis.mongodb.net/?retryWrites=true&w=majority");
+    IMongoDatabase database;
+    IMongoCollection<BsonDocument> collection;
+
+    
     // Start is called before the first frame update
     void Start()
     {
         videoLink = UploadVideoScript.downloadLink;
-        Debug.Log(videoLink);     
+        Debug.Log(videoLink);
+
+        database = client.GetDatabase("UserVideoDB");
+        collection = database.GetCollection<BsonDocument>("UserVideoCollection");
+        getObjectID();
+    }
+
+    private void getObjectID()
+    {
+        var filter = Builders<BsonDocument>.Filter.Eq("videoURL", videoLink);
+        if (filter != null)
+        {
+            try
+            {
+                var result = collection.Find(filter).FirstOrDefault().GetValue("_id");
+                Debug.Log(result.ToString());
+                videoCode = result.ToString();
+            }
+            catch (NullReferenceException ex)
+            {
+                Debug.Log("dsda");
+            }
+        }
+        else
+        {
+            Debug.Log("Invalid video code");
+        }
+
+        videoCodeText.text = "Your video code is " + videoCode + " Please do not forget this";
     }
 
     IEnumerator playVideo()
@@ -79,5 +123,10 @@ public class PreviewUploadedVideo : MonoBehaviour
         {
             StartCoroutine(playVideo());
         }
+    }
+
+    public void finishButtonClicked()
+    {
+        SceneManager.LoadScene("LibraryPage");
     }
 }

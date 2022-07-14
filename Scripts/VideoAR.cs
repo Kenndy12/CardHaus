@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,21 +42,24 @@ public class VideoAR : MonoBehaviour
     {
         videoCode = videoCodeField.text;
 
-        
+
         var filter = Builders<BsonDocument>.Filter.Eq("_id", ObjectId.Parse(videoCode));
         Debug.Log(filter);
         if (filter != null)
         {
-            var result = collection.Find(filter).FirstOrDefault().GetValue("videoURL");
-            if (result == null)
+            try
             {
-                Debug.Log("Invalid video code");
-            }
-            else
-            {
+                var result = collection.Find(filter).FirstOrDefault().GetValue("videoURL");
                 Debug.Log(result.ToString());
-                videoLink = "https://unity-youtube-dl-server.herokuapp.com/" + result.ToString();
+                videoLink = result.ToString();
             }
+            catch(NullReferenceException ex)
+            {
+                Debug.Log("dsda");
+
+                //Disini ntar ada code buat display "invalid video code"
+
+            }         
         }
         else
         {

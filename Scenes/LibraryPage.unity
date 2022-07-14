@@ -1677,15 +1677,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dbb33d00aece1d4a8b79ff0923e542b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  warningPanel: {fileID: 332073967}
   allTemplates:
   - cardName: Video Greeting Card
-    Image: {fileID: 0}
-  - cardName: Wedding Card
-    Image: {fileID: 21300000, guid: a042dcfc75ff7844caf028fe96a497a2, type: 3}
-  - cardName: New Year Card
-    Image: {fileID: 0}
-  - cardName: Halloween Card
-    Image: {fileID: 0}
+    Image: {fileID: 21300000, guid: af0214dd4d694ab4f86037a7403a6bd7, type: 3}
 --- !u!1 &1256203557
 GameObject:
   m_ObjectHideFlags: 0
