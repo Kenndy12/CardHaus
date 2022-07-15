@@ -245,6 +245,6 @@ public class AuthManager : MonoBehaviour
 
     public void loginSuccess()
     {
-        SceneManager.LoadScene("LibraryPage");
+        SceneManager.LoadScene("LibraryPage");       
     }
 }

@@ -23,7 +23,7 @@ public class VideoAR : MonoBehaviour
 
     void Awake()
     {
-        database = client.GetDatabase("UserVideoDB");
+        database = client.GetDatabase("CardHausDatabase");
         collection = database.GetCollection<BsonDocument>("UserVideoCollection");
         DontDestroyOnLoad(this);
     }

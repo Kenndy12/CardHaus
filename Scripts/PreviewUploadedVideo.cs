@@ -16,6 +16,7 @@ public class PreviewUploadedVideo : MonoBehaviour
 {
     public RawImage image;
     public GameObject playPauseIcon;
+    public GameObject clipboardIcon;
 
     private VideoPlayer vidPlayer;
 
@@ -25,6 +26,7 @@ public class PreviewUploadedVideo : MonoBehaviour
     private string videoLink;
     private string videoCode;
 
+    public TMP_Text messageText;
     public TMP_Text videoCodeText;
 
     MongoClient client = new MongoClient("mongodb+srv://CardHaus:cardHaus321@cardhauscluster.lznis.mongodb.net/?retryWrites=true&w=majority");
@@ -38,7 +40,7 @@ public class PreviewUploadedVideo : MonoBehaviour
         videoLink = UploadVideoScript.downloadLink;
         Debug.Log(videoLink);
 
-        database = client.GetDatabase("UserVideoDB");
+        database = client.GetDatabase("CardHausDatabase");
         collection = database.GetCollection<BsonDocument>("UserVideoCollection");
         getObjectID();
     }
@@ -64,7 +66,9 @@ public class PreviewUploadedVideo : MonoBehaviour
             Debug.Log("Invalid video code");
         }
 
-        videoCodeText.text = "Your video code is " + videoCode + " Please do not forget this";
+        messageText.text = "Your video code is ";
+        videoCodeText.text = videoCode;
+        clipboardIcon.SetActive(true);
     }
 
     IEnumerator playVideo()
@@ -127,6 +131,17 @@ public class PreviewUploadedVideo : MonoBehaviour
 
     public void finishButtonClicked()
     {
+        messageText.text = "";
+        videoCodeText.text = "";
+        clipboardIcon.SetActive(false);
         SceneManager.LoadScene("LibraryPage");
+    }
+
+    public void copyToClipboard()
+    {
+        Debug.Log(videoCodeText.text);
+        string code = videoCodeText.text;
+        Debug.Log(code);
+        GUIUtility.systemCopyBuffer = code;
     }
 }

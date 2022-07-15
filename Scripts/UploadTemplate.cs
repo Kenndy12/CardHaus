@@ -1,54 +1,45 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-
-
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Video;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
 using TMPro;
-
-using System.IO;
-
-using Firebase;
-using Firebase.Extensions;
-using Firebase.Storage;
-using Firebase.Auth;
 
 using MongoDB.Driver;
 using MongoDB.Bson;
 
 using SimpleFileBrowser;
 
-
-public class UploadVideoScript : MonoBehaviour
+public class UploadTemplate : MonoBehaviour
 {
-    //Firebase
-    FirebaseStorage storage;
-    StorageReference storageRef;
-    private StorageReference tempRef;
-
     //MongoDB
     MongoClient client = new MongoClient("mongodb+srv://CardHaus:cardHaus321@cardhauscluster.lznis.mongodb.net/?retryWrites=true&w=majority");
     IMongoDatabase database;
     IMongoCollection<BsonDocument> collection;
+
+    public RawImage image;
+
+    public Toggle videoCardToggle;
+    public TMP_InputField templateNameField;
+    public TMP_InputField templateIDField;
+   
+    private byte[] imageBytes;
     
-    public TMP_Text resultText;
-    public static string downloadLink;
-
-    byte[] videoBytes;
-
-    public FirebaseUser user;
+    private string templateName;
+    private string templateID;
+    private bool isVideoCard;
 
     // Start is called before the first frame update
     void Start()
     {
-        storage = FirebaseStorage.DefaultInstance;
-        storageRef = storage.GetReferenceFromUrl("gs://cardhaus-1ed70.appspot.com");
-
         database = client.GetDatabase("CardHausDatabase");
-        collection = database.GetCollection<BsonDocument>("UserVideoCollection");
+        collection = database.GetCollection<BsonDocument>("CardHausTemplate");
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
     }
 
     public void openFileExplorer()
@@ -56,12 +47,12 @@ public class UploadVideoScript : MonoBehaviour
         // Set filters (optional)
         // It is sufficient to set the filters just once (instead of each time before showing the file browser dialog), 
         // if all the dialogs will be using the same filters
-        FileBrowser.SetFilters(false, new FileBrowser.Filter("Videos", ".mp4"));
+        FileBrowser.SetFilters(false, new FileBrowser.Filter("Images", ".jpeg",".jpg",".png"));
 
         // Set excluded file extensions (optional) (by default, .lnk and .tmp extensions are excluded)
         // Note that when you use this function, .lnk and .tmp extensions will no longer be
         // excluded unless you explicitly add them as parameters to the function
-        FileBrowser.SetExcludedExtensions(".*",".lnk", ".tmp", ".zip", ".rar", ".exe");
+        FileBrowser.SetExcludedExtensions(".*", ".lnk", ".tmp", ".zip", ".rar", ".exe");
 
         // Add a new quick link to the browser (optional) (returns true if quick link is added successfully)
         // It is sufficient to add a quick link just once
@@ -96,51 +87,58 @@ public class UploadVideoScript : MonoBehaviour
 
             // Read the bytes of the first file via FileBrowserHelpers
             // Contrary to File.ReadAllBytes, this function works on Android 10+, as well
-            videoBytes = FileBrowserHelpers.ReadBytesFromFile(FileBrowser.Result[0]);
-            resultText.text = "Success";
+            imageBytes = FileBrowserHelpers.ReadBytesFromFile(FileBrowser.Result[0]);
+            Debug.Log(imageBytes);
+        }
+        previewImage();
+    }
+
+    private void previewImage()
+    {
+        Debug.Log(imageBytes);
+        Texture2D test = new Texture2D(2, 2);
+        test.LoadImage(imageBytes);
+        image.texture = test;
+    }
+
+    public void uploadToDatabase()
+    {
+        if (checkFields())
+        {
+            templateName = templateNameField.text;
+            templateID = templateIDField.text;
+            isVideoCard = videoCardToggle.isOn;
+
+            Debug.Log(templateName);
+            Debug.Log(templateID);
+            Debug.Log(isVideoCard);
+
+            var document = new BsonDocument { { "templateName", templateName }, {"templateID",templateID}, {"isTemplate",true},
+                {"isVideoCard",isVideoCard }, { "templateImage", imageBytes} };
+            collection.InsertOne(document);
+        }
+        else
+        {
+            Debug.Log("One of the fields is empty");
         }
     }
 
-    public async void  uploadFile()
+    private bool checkFields()
     {
-        var todayDate = DateTime.Now;
-        string strToday = todayDate.ToString("MM/dd/yyyy h:mm tt");
-        strToday = strToday.Replace("/", "-");
-        string videoID = FirebaseAuth.DefaultInstance.CurrentUser.DisplayName + "/" + strToday + ".mp4";
-        tempRef = storageRef.Child(videoID);
-        var newMetadata = new MetadataChange();
-        newMetadata.ContentType = "video/mp4";
-
-        await tempRef.PutBytesAsync(videoBytes, newMetadata).ContinueWithOnMainThread((task) => {
-            if (task.IsFaulted || task.IsCanceled)
-            {   
-                Debug.Log(task.Result);
-                Debug.Log(task.Exception.ToString());
+        if(templateNameField.text != "")
+        {
+            if(templateIDField.text != "")
+            {
+                return true;
             }
             else
             {
-                Debug.Log(task.Result);
-                Debug.Log("File Uploaded Successfully!");
+                return false;
             }
-        });
-
-        await tempRef.GetDownloadUrlAsync().ContinueWithOnMainThread(task => {
-            if (!task.IsFaulted && !task.IsCanceled)
-            {
-                downloadLink = task.Result.ToString();
-                Debug.Log("Download URL: " + downloadLink);
-                var document = new BsonDocument { { "videoURL", downloadLink } };
-                collection.InsertOne(document);
-            }
-        });
-
-        resultText.text = "";
-        SceneManager.LoadScene("PreviewUploadedVideoPage");
+        }
+        else
+        {
+            return false;
+        }
     }
-
-    public string getLink()
-    {
-        return downloadLink;
-    }
-
 }
