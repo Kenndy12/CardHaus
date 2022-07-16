@@ -76,7 +76,8 @@ public class CardTemplateManager : MonoBehaviour
     {
         var filter = Builders<BsonDocument>.Filter.Eq("isTemplate", true);
 
-        foreach(BsonDocument post in collection.Find(filter).ToListAsync().Result)
+
+        foreach (BsonDocument post in collection.Find(filter).ToListAsync().Result)
         {
             cardTemplate tmp = new cardTemplate();
             tmp.cardName = (string)post.GetElement("templateName").Value;
@@ -87,8 +88,8 @@ public class CardTemplateManager : MonoBehaviour
             tmp.cardImage.LoadImage((byte[])post.GetElement("templateImage").Value);
 
             templateArray.Add(tmp);
-            counter++;
         }
+        
     }
 
     private void instantiateArray()
