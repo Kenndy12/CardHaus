@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -9,8 +10,11 @@ using UnityEngine.SceneManagement;
 
 using TMPro;
 
-using MongoDB.Driver;
-using MongoDB.Bson;
+using Firebase;
+using Firebase.Extensions;
+using Firebase.Storage;
+using Firebase.Firestore;
+
 
 public class PreviewUploadedVideo : MonoBehaviour
 {
@@ -29,46 +33,42 @@ public class PreviewUploadedVideo : MonoBehaviour
     public TMP_Text messageText;
     public TMP_Text videoCodeText;
 
-    MongoClient client = new MongoClient("mongodb+srv://CardHaus:cardHaus321@cardhauscluster.lznis.mongodb.net/?retryWrites=true&w=majority");
-    IMongoDatabase database;
-    IMongoCollection<BsonDocument> collection;
-
-    
+    FirebaseFirestore db;
     // Start is called before the first frame update
     void Start()
     {
         videoLink = UploadVideoScript.downloadLink;
         Debug.Log(videoLink);
 
-        database = client.GetDatabase("CardHausDatabase");
-        collection = database.GetCollection<BsonDocument>("UserVideoCollection");
+        db = FirebaseFirestore.DefaultInstance;
         getObjectID();
+        //Task.Run(async () => { await getObjectID(); }).Wait();
+       
     }
 
     private void getObjectID()
     {
-        var filter = Builders<BsonDocument>.Filter.Eq("videoURL", videoLink);
-        if (filter != null)
+        Query capitalQuery = db.Collection("UserVideos").WhereEqualTo("videoLink", videoLink);
+        capitalQuery.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
-            try
+            QuerySnapshot capitalQuerySnapshot = task.Result;
+            foreach (DocumentSnapshot documentSnapshot in capitalQuerySnapshot.Documents)
             {
-                var result = collection.Find(filter).FirstOrDefault().GetValue("_id");
-                Debug.Log(result.ToString());
-                videoCode = result.ToString();
-            }
-            catch (NullReferenceException ex)
-            {
-                Debug.Log("dsda");
-            }
-        }
-        else
-        {
-            Debug.Log("Invalid video code");
-        }
+                Dictionary<string, object> doc = documentSnapshot.ToDictionary();
+                if (videoLink == (string)doc["videoLink"])
+                {
+                    videoCode = (string)documentSnapshot.Id;
+                    Debug.Log(documentSnapshot.Id);
+                    messageText.text = "Your video code is ";
+                    Debug.Log("hey" + videoCode);
+                    videoCodeText.text = videoCode;
+                    clipboardIcon.SetActive(true);
+                }
+                // Newline to separate entries
+            };
+        });
 
-        messageText.text = "Your video code is ";
-        videoCodeText.text = videoCode;
-        clipboardIcon.SetActive(true);
+       
     }
 
     IEnumerator playVideo()

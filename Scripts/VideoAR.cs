@@ -10,7 +10,7 @@ public class VideoAR : MonoBehaviour
 {
     public GameObject videoCodePanel;
     public TMP_InputField videoCodeField;
-
+    public TMP_Text messageText;
     private string videoCode;
     private string videoLink;
 
@@ -36,6 +36,7 @@ public class VideoAR : MonoBehaviour
     public void deactivateVideoPanel()
     {
         videoCodePanel.SetActive(false);
+        messageText.text = "";
     }
 
     public void enterClicked()
@@ -43,29 +44,33 @@ public class VideoAR : MonoBehaviour
         videoCode = videoCodeField.text;
 
 
-        var filter = Builders<BsonDocument>.Filter.Eq("_id", ObjectId.Parse(videoCode));
-        Debug.Log(filter);
-        if (filter != null)
+        try
         {
-            try
+            var filter = Builders<BsonDocument>.Filter.Eq("_id", ObjectId.Parse(videoCode));
+            if (filter != null)
             {
-                var result = collection.Find(filter).FirstOrDefault().GetValue("videoURL");
-                Debug.Log(result.ToString());
-                videoLink = result.ToString();
+                try
+                {
+                    var result = collection.Find(filter).FirstOrDefault().GetValue("videoURL");
+                    Debug.Log(result.ToString());
+                    videoLink = result.ToString();
+                    deactivateVideoPanel();
+                }
+                catch (NullReferenceException)
+                {
+                    messageText.text = "Invalid video code";
+                }
             }
-            catch(NullReferenceException ex)
+            else
             {
-                Debug.Log("dsda");
-
-                //Disini ntar ada code buat display "invalid video code"
-
-            }         
+                Debug.Log("Invalid video code");
+            }
         }
-        else
+        catch (FormatException)
         {
-            Debug.Log("Invalid video code");
+            messageText.text = "Invalid video code";
         }
-        deactivateVideoPanel();
+
     }
 
     public string passVideoLink()

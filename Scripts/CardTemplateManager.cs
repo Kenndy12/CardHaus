@@ -1,15 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System;
+using UnityEngine.Networking;
+
 using TMPro;
+
 using Firebase;
 using Firebase.Auth;
-
-using MongoDB.Driver;
-using MongoDB.Bson;
+using Firebase.Firestore;
+using Firebase.Extensions;
+using Firebase.Storage;
 
 public static class ButtonExtension
 {
@@ -26,94 +30,106 @@ public class CardTemplateManager : MonoBehaviour
 {
     public GameObject warningPanel;
 
-    MongoClient client = new MongoClient("mongodb+srv://CardHaus:cardHaus321@cardhauscluster.lznis.mongodb.net/?retryWrites=true&w=majority");
-    IMongoDatabase database;
-    IMongoCollection<BsonDocument> collection;
-
-    private int length;
-
-    private int counter = 0;
+    private int length = 0;
 
     [Serializable]
     public struct cardTemplate
     {
         public string cardName;
         public string cardID;
+        public string imageURL;
         public bool isTemplate;
         public bool isVideoTemplate;
         public Texture2D cardImage;
-
-        public Sprite Image;
     }
 
     cardTemplate[] allTemplates;
     ArrayList templateArray = new ArrayList();
 
+    FirebaseFirestore db;
+    FirebaseStorage storage;
+    StorageReference storageRef;
+    private StorageReference tempRef;
+
+    private bool called = false;
+
+    public RawImage n;
+
     // Start is called before the first frame update
     void Start()
     {
-        database = client.GetDatabase("CardHausDatabase");
-        collection = database.GetCollection<BsonDocument>("CardHausTemplate");
+        db = FirebaseFirestore.DefaultInstance;
 
-        getCountFromMongo();
+        storage = FirebaseStorage.DefaultInstance;
+        storageRef = storage.GetReferenceFromUrl("gs://cardhaus-1ed70.appspot.com");
+
         insertIntoTemplateArray();
-        instantiateArray();
-
-        /*for(int i=0; i < n; i++)
-        {
-            g = Instantiate(buttonTemplate, transform);
-            g.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = allTemplates[i].cardName;
-            g.transform.GetChild(1).GetComponent<Image>().sprite = allTemplates[i].Image;
-
-            g.GetComponent<Button>().AddEventListener(i, ItemClicked); 
-        }
-
-        Destroy(buttonTemplate);*/
         
     }
 
-    private void insertIntoTemplateArray()
+    void Update()
     {
-        var filter = Builders<BsonDocument>.Filter.Eq("isTemplate", true);
-
-
-        foreach (BsonDocument post in collection.Find(filter).ToListAsync().Result)
+        if (called)
         {
-            cardTemplate tmp = new cardTemplate();
-            tmp.cardName = (string)post.GetElement("templateName").Value;
-            tmp.cardID = (string)post.GetElement("templateID").Value;
-            tmp.isTemplate = (bool)post.GetElement("isTemplate").Value;
-            tmp.isVideoTemplate = (bool)post.GetElement("isVideoCard").Value;
+            instantiateArray();
+            called = false;
+        }
+    }
+
+    IEnumerator DownloadImage(cardTemplate tmp, RawImage m)
+    {
+        UnityWebRequest request = UnityWebRequestTexture.GetTexture(tmp.imageURL);
+        yield return request.SendWebRequest();
+        if (request.isNetworkError || request.isHttpError)
+            Debug.Log(request.error);
+        else
+        {
             tmp.cardImage = new Texture2D(2, 2);
-            tmp.cardImage.LoadImage((byte[])post.GetElement("templateImage").Value);
-
-            templateArray.Add(tmp);
+            tmp.cardImage = ((DownloadHandlerTexture)request.downloadHandler).texture;
+            m.texture = tmp.cardImage;
+            Debug.Log("ds");
         }
-        
     }
 
-    private void instantiateArray()
+    public async void insertIntoTemplateArray()
     {
+        Query allCitiesQuery = db.Collection("CardHausTemplate");
+        QuerySnapshot allCitiesQuerySnapshot = await allCitiesQuery.GetSnapshotAsync();
+
+        foreach (DocumentSnapshot documentSnapshot in allCitiesQuerySnapshot.Documents)
+        {
+            Dictionary<string, object> documentDictionary = documentSnapshot.ToDictionary();
+            Debug.Log(documentDictionary["templateName"]);
+            cardTemplate tmp = new cardTemplate();
+            
+            tmp.cardName = (string)documentDictionary["templateName"];
+            tmp.cardID = (string)documentDictionary["templateID"];
+            tmp.isTemplate = (bool)documentDictionary["isTemplate"];
+            tmp.isVideoTemplate = (bool)documentDictionary["isVideoCard"];
+            tmp.imageURL = (string)documentDictionary["imageURL"];     
+            templateArray.Add(tmp);
+            length++;
+        }
+        called = true;
+    }
+
+
+    public void instantiateArray()
+    {
+        Debug.Log("gety");
         GameObject buttonTemplate = transform.GetChild(0).gameObject;
         GameObject g;
         for (int i = 0; i < length; i++)
         {
-            Debug.Log("hi");
             cardTemplate tmp = (cardTemplate)templateArray[i];
+            
             g = Instantiate(buttonTemplate, transform);
             g.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tmp.cardName;
-            g.transform.GetChild(1).GetComponent<RawImage>().texture = tmp.cardImage;
-
+            StartCoroutine(DownloadImage(tmp, g.transform.GetChild(1).GetComponent<RawImage>()));
             g.GetComponent<Button>().AddEventListener(i, ItemClicked);
         }
 
         Destroy(buttonTemplate);
-    }
-
-    private void getCountFromMongo()
-    {
-        var filter = Builders<BsonDocument>.Filter.Eq("isTemplate", true);
-        length = (int)collection.Count(filter);
     }
 
     void ItemClicked(int index)
@@ -124,8 +140,7 @@ public class CardTemplateManager : MonoBehaviour
             case 0:
                 if (checkLoggedIn())
                 {
-                    Debug.Log(FirebaseAuth.DefaultInstance.CurrentUser.DisplayName);
-                    SceneManager.LoadScene("VideoGreetingCard");
+                    SceneManager.LoadScene("BirthdayCardTemplate");
                 }
                 else
                 {

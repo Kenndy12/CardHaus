@@ -5,41 +5,41 @@ using UnityEngine.UI;
 
 using TMPro;
 
-using MongoDB.Driver;
-using MongoDB.Bson;
-
 using SimpleFileBrowser;
+
+using Firebase;
+using Firebase.Firestore;
+using Firebase.Extensions;
+using Firebase.Storage;
 
 public class UploadTemplate : MonoBehaviour
 {
-    //MongoDB
-    MongoClient client = new MongoClient("mongodb+srv://CardHaus:cardHaus321@cardhauscluster.lznis.mongodb.net/?retryWrites=true&w=majority");
-    IMongoDatabase database;
-    IMongoCollection<BsonDocument> collection;
-
     public RawImage image;
 
     public Toggle videoCardToggle;
     public TMP_InputField templateNameField;
     public TMP_InputField templateIDField;
-   
+
     private byte[] imageBytes;
-    
+
     private string templateName;
     private string templateID;
     private bool isVideoCard;
+    private string downloadLink;
+
+    FirebaseFirestore db;
+
+    FirebaseStorage storage;
+    StorageReference storageRef;
+    private StorageReference tempRef;
 
     // Start is called before the first frame update
     void Start()
     {
-        database = client.GetDatabase("CardHausDatabase");
-        collection = database.GetCollection<BsonDocument>("CardHausTemplate");
-    }
+        storage = FirebaseStorage.DefaultInstance;
+        storageRef = storage.GetReferenceFromUrl("gs://cardhaus-1ed70.appspot.com");
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        db = FirebaseFirestore.DefaultInstance;
     }
 
     public void openFileExplorer()
@@ -47,7 +47,7 @@ public class UploadTemplate : MonoBehaviour
         // Set filters (optional)
         // It is sufficient to set the filters just once (instead of each time before showing the file browser dialog), 
         // if all the dialogs will be using the same filters
-        FileBrowser.SetFilters(false, new FileBrowser.Filter("Images", ".jpeg",".jpg",".png"));
+        FileBrowser.SetFilters(false, new FileBrowser.Filter("Images", ".jpeg", ".jpg", ".png"));
 
         // Set excluded file extensions (optional) (by default, .lnk and .tmp extensions are excluded)
         // Note that when you use this function, .lnk and .tmp extensions will no longer be
@@ -101,7 +101,7 @@ public class UploadTemplate : MonoBehaviour
         image.texture = test;
     }
 
-    public void uploadToDatabase()
+    public async void uploadToDatabase()
     {
         if (checkFields())
         {
@@ -109,13 +109,56 @@ public class UploadTemplate : MonoBehaviour
             templateID = templateIDField.text;
             isVideoCard = videoCardToggle.isOn;
 
+
             Debug.Log(templateName);
             Debug.Log(templateID);
             Debug.Log(isVideoCard);
 
-            var document = new BsonDocument { { "templateName", templateName }, {"templateID",templateID}, {"isTemplate",true},
-                {"isVideoCard",isVideoCard }, { "templateImage", imageBytes} };
-            collection.InsertOne(document);
+            string templateNameWithoutSpace = templateName.Replace(" ", "");
+            string templateImage = "CardHausTemplate/" + templateNameWithoutSpace;
+            tempRef = storageRef.Child(templateImage);
+            var newMetadata = new MetadataChange();
+            newMetadata.ContentType = "image/jpeg";
+
+            await tempRef.PutBytesAsync(imageBytes, newMetadata).ContinueWithOnMainThread((task) => {
+                if (task.IsFaulted || task.IsCanceled)
+                {
+                    Debug.Log(task.Result);
+                    Debug.Log(task.Exception.ToString());
+                }
+                else
+                {
+                    Debug.Log(task.Result);
+                    Debug.Log("File Uploaded Successfully!");
+                }
+            });
+
+            await tempRef.GetDownloadUrlAsync().ContinueWithOnMainThread(task => {
+                if (!task.IsFaulted && !task.IsCanceled)
+                {
+                    downloadLink = task.Result.ToString();
+                    Debug.Log("Download URL: " + downloadLink);
+                }
+            });
+
+            
+            int index = downloadLink.IndexOf("&token");
+            if (index >= 0)
+                downloadLink = downloadLink.Substring(0, index);
+
+            DocumentReference docRef = db.Collection("CardHausTemplate").Document(templateName);
+            Dictionary<string, object> template = new Dictionary<string, object>
+            {
+                { "templateName", templateName },
+                { "templateID", templateID },
+                { "isTemplate", true},
+                { "isVideoCard", isVideoCard },
+                { "imageURL", downloadLink},
+            };
+            await docRef.SetAsync(template).ContinueWithOnMainThread(task => {
+                Debug.Log("Added document to the collection.");
+            });
+
         }
         else
         {
@@ -125,9 +168,9 @@ public class UploadTemplate : MonoBehaviour
 
     private bool checkFields()
     {
-        if(templateNameField.text != "")
+        if (templateNameField.text != "")
         {
-            if(templateIDField.text != "")
+            if (templateIDField.text != "")
             {
                 return true;
             }

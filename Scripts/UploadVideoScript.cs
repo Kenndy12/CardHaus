@@ -15,9 +15,8 @@ using Firebase;
 using Firebase.Extensions;
 using Firebase.Storage;
 using Firebase.Auth;
+using Firebase.Firestore;
 
-using MongoDB.Driver;
-using MongoDB.Bson;
 
 using SimpleFileBrowser;
 
@@ -28,12 +27,8 @@ public class UploadVideoScript : MonoBehaviour
     FirebaseStorage storage;
     StorageReference storageRef;
     private StorageReference tempRef;
+    FirebaseFirestore db;
 
-    //MongoDB
-    MongoClient client = new MongoClient("mongodb+srv://CardHaus:cardHaus321@cardhauscluster.lznis.mongodb.net/?retryWrites=true&w=majority");
-    IMongoDatabase database;
-    IMongoCollection<BsonDocument> collection;
-    
     public TMP_Text resultText;
     public static string downloadLink;
 
@@ -47,8 +42,7 @@ public class UploadVideoScript : MonoBehaviour
         storage = FirebaseStorage.DefaultInstance;
         storageRef = storage.GetReferenceFromUrl("gs://cardhaus-1ed70.appspot.com");
 
-        database = client.GetDatabase("CardHausDatabase");
-        collection = database.GetCollection<BsonDocument>("UserVideoCollection");
+        db = FirebaseFirestore.DefaultInstance;
     }
 
     public void openFileExplorer()
@@ -129,8 +123,14 @@ public class UploadVideoScript : MonoBehaviour
             {
                 downloadLink = task.Result.ToString();
                 Debug.Log("Download URL: " + downloadLink);
-                var document = new BsonDocument { { "videoURL", downloadLink } };
-                collection.InsertOne(document);
+                DocumentReference docRef = db.Collection("UserVideos").Document();
+                Dictionary<string, object> template = new Dictionary<string, object>
+                {
+                    { "videoLink", downloadLink },
+                };
+                docRef.SetAsync(template).ContinueWithOnMainThread(task => {
+                Debug.Log("Added document to the collection.");
+                });
             }
         });
 
