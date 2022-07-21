@@ -3,8 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using MongoDB.Driver;
-using MongoDB.Bson;
+
+using Firebase;
+using Firebase.Extensions;
+using Firebase.Storage;
+using Firebase.Firestore;
 
 public class VideoAR : MonoBehaviour
 {
@@ -17,14 +20,11 @@ public class VideoAR : MonoBehaviour
     private GameObject ARVideoPlane;
     private ARVideoBehaviour ARBehaviour;
 
-    MongoClient client = new MongoClient("mongodb+srv://CardHaus:cardHaus321@cardhauscluster.lznis.mongodb.net/?retryWrites=true&w=majority");
-    IMongoDatabase database;
-    IMongoCollection<BsonDocument> collection;
+    FirebaseFirestore db;
 
     void Awake()
     {
-        database = client.GetDatabase("CardHausDatabase");
-        collection = database.GetCollection<BsonDocument>("UserVideoCollection");
+        db = FirebaseFirestore.DefaultInstance;
         DontDestroyOnLoad(this);
     }
 
@@ -43,33 +43,24 @@ public class VideoAR : MonoBehaviour
     {
         videoCode = videoCodeField.text;
 
-
-        try
+        DocumentReference docRef = db.Collection("UserVideos").Document(videoCode);
+        docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("_id", ObjectId.Parse(videoCode));
-            if (filter != null)
-            {
-                try
-                {
-                    var result = collection.Find(filter).FirstOrDefault().GetValue("videoURL");
-                    Debug.Log(result.ToString());
-                    videoLink = result.ToString();
-                    deactivateVideoPanel();
-                }
-                catch (NullReferenceException)
-                {
-                    messageText.text = "Invalid video code";
-                }
+            DocumentSnapshot snapshot = task.Result;
+            if (snapshot.Exists)
+            {             
+                Dictionary<string, object> doc = snapshot.ToDictionary();
+                videoLink = (string)doc["videoLink"];
+                Debug.Log(videoLink);
+                deactivateVideoPanel();
             }
             else
             {
-                Debug.Log("Invalid video code");
+                messageText.text = "Invalid Video Code";
+                Debug.Log(String.Format("Document {0} does not exist!", snapshot.Id));
             }
-        }
-        catch (FormatException)
-        {
-            messageText.text = "Invalid video code";
-        }
+        });
+
 
     }
 

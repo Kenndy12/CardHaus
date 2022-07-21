@@ -106,7 +106,7 @@ public class CardTemplateManager : MonoBehaviour
             tmp.cardID = (string)documentDictionary["templateID"];
             tmp.isTemplate = (bool)documentDictionary["isTemplate"];
             tmp.isVideoTemplate = (bool)documentDictionary["isVideoCard"];
-            tmp.imageURL = (string)documentDictionary["imageURL"];     
+            tmp.imageURL = (string)documentDictionary["imageURL"]; 
             templateArray.Add(tmp);
             length++;
         }
@@ -125,7 +125,20 @@ public class CardTemplateManager : MonoBehaviour
             
             g = Instantiate(buttonTemplate, transform);
             g.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tmp.cardName;
+
+            
+            /*else
+            {
+                g.transform.GetChild(2).GetComponent<GameObject>().SetActive(false);
+            }*/
+
             StartCoroutine(DownloadImage(tmp, g.transform.GetChild(1).GetComponent<RawImage>()));
+
+            if (tmp.isVideoTemplate)
+            {
+                g.transform.GetChild(2).gameObject.SetActive(true);
+            }
+
             g.GetComponent<Button>().AddEventListener(i, ItemClicked);
         }
 
@@ -148,7 +161,7 @@ public class CardTemplateManager : MonoBehaviour
                 }                             
                 break;
             case 1:
-                SceneManager.LoadScene("WeddingCardDetails");
+                SceneManager.LoadScene("NewYearCard");
                 break;
         }
     }

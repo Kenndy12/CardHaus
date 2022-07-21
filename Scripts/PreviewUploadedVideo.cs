@@ -41,9 +41,7 @@ public class PreviewUploadedVideo : MonoBehaviour
         Debug.Log(videoLink);
 
         db = FirebaseFirestore.DefaultInstance;
-        getObjectID();
-        //Task.Run(async () => { await getObjectID(); }).Wait();
-       
+        getObjectID();     
     }
 
     private void getObjectID()

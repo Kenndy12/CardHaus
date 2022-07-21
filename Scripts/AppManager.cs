@@ -61,4 +61,5 @@ public class AppManager : MonoBehaviour
     {
         warningPanel.SetActive(false);
     }
+
 }
