@@ -15,6 +15,7 @@ using SimpleFileBrowser;
 using Firebase;
 using Firebase.Extensions;
 using Firebase.Storage;
+using Firebase.Firestore;
 using Firebase.Auth;
 
 using ZXing;
@@ -43,6 +44,7 @@ public class CustomizeCard : MonoBehaviour
     private bool fileExist = true;
     private bool CallingUploadAudio = false;
     private string audioID;
+    private string audioName;
     /*
     private Texture2D QrCodeTexture;
     public RawImage QRCode;
@@ -57,12 +59,14 @@ public class CustomizeCard : MonoBehaviour
     StorageReference storageRef;
     private StorageReference tempRef;
     private StorageReference checkIfFileExist;
+    FirebaseFirestore db;
 
     // Start is called before the first frame update
     void Start()
     {
         storage = FirebaseStorage.DefaultInstance;
         storageRef = storage.GetReferenceFromUrl("gs://cardhaus-1ed70.appspot.com");
+        db = FirebaseFirestore.DefaultInstance;
         StartCoroutine(DownloadImage());
     }
 
@@ -187,6 +191,7 @@ public class CustomizeCard : MonoBehaviour
                 }
                 else
                 {
+                    audioName = audioNameField.text;
                     CallingUploadAudio = true;
                     fileExist = false;
                 }
@@ -227,7 +232,16 @@ public class CustomizeCard : MonoBehaviour
             if (!task.IsFaulted && !task.IsCanceled)
             {
                 streamLink = task.Result.ToString();
-                Debug.Log("Download URL: " + streamLink);                
+                Debug.Log("Download URL: " + streamLink);
+                DocumentReference docRef = db.Collection("UserAudios").Document();
+                Dictionary<string, object> template = new Dictionary<string, object>
+                {
+                    { "audioName", audioName},
+                    { "audioLink", streamLink },
+                };
+                docRef.SetAsync(template).ContinueWithOnMainThread(task => {
+                    Debug.Log("Added document to the collection.");
+                });
             }
         });
 

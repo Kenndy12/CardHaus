@@ -42,8 +42,6 @@ public class CardTemplateManager : MonoBehaviour
         public bool isVideoTemplate;
         public Texture2D cardImage;
     }
-
-    cardTemplate[] allTemplates;
     ArrayList templateArray = new ArrayList();
 
     FirebaseFirestore db;
