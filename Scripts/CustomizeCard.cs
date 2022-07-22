@@ -6,6 +6,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 using TMPro;
 
@@ -28,24 +29,34 @@ public class CustomizeCard : MonoBehaviour
 
     public GameObject cardDetailPage;
     public GameObject cardCustomizePage;
-    public GameObject testpanel;
 
     public TMP_Text mainText;
     public TMP_Text subText;
 
     public TMP_InputField mainTextField;
     public TMP_InputField subTextField;
+    public TMP_Text warningMessage;
 
     private byte[] audioBytes;
     private string streamLink;
 
+    private bool fileExist = true;
+    private bool CallingUploadAudio = false;
+    private string audioID;
+    /*
     private Texture2D QrCodeTexture;
     public RawImage QRCode;
-    public RawImage testImage;
+    public GameObject QRCodeActiveOrNot;*/
+    private Texture2D Card;
+
+    public GameObject renameAudioField;
+    public TMP_InputField audioNameField;
+
     //Firebase
     FirebaseStorage storage;
     StorageReference storageRef;
     private StorageReference tempRef;
+    private StorageReference checkIfFileExist;
 
     // Start is called before the first frame update
     void Start()
@@ -53,16 +64,16 @@ public class CustomizeCard : MonoBehaviour
         storage = FirebaseStorage.DefaultInstance;
         storageRef = storage.GetReferenceFromUrl("gs://cardhaus-1ed70.appspot.com");
         StartCoroutine(DownloadImage());
-
-        StartCoroutine(takeScreenshot());
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if(!fileExist && CallingUploadAudio)
+        {
+            uploadAudio();
+            CallingUploadAudio = false;
+        }
     }
-
     IEnumerator DownloadImage()
     {
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(templateLink);
@@ -139,20 +150,66 @@ public class CustomizeCard : MonoBehaviour
             // Read the bytes of the first file via FileBrowserHelpers
             // Contrary to File.ReadAllBytes, this function works on Android 10+, as well
             audioBytes = FileBrowserHelpers.ReadBytesFromFile(FileBrowser.Result[0]);
+
+            if(audioBytes != null)
+            {
+                renameAudioField.SetActive(true);
+            }
         }
+    }
+
+    public void finishClicked()
+    { 
+        if(audioBytes!=null)
+        {
+            checkFileExist();
+        }
+        else
+        {
+            StartCoroutine(takeScreenshot());
+        }
+
+       
+    }
+
+    private void checkFileExist()
+    {
+        if (audioNameField.text != "")
+        {
+            audioID = "/Audios/" + audioNameField.text + ".mp3";
+            checkIfFileExist = storageRef.Child(audioID);
+            //Check if file exists
+            checkIfFileExist.GetDownloadUrlAsync().ContinueWithOnMainThread(task => {
+                if (!task.IsFaulted && !task.IsCanceled)
+                {
+                    warningMessage.text = "This file already exist";
+                    fileExist = false;
+                }
+                else
+                {
+                    CallingUploadAudio = true;
+                    fileExist = false;
+                }
+            });
+        }
+        else
+        {
+            warningMessage.text = "Please enter an audio name";
+            fileExist = true;
+        }
+
+        fileExist = true;
     }
 
     public async void uploadAudio()
     {
-        var todayDate = DateTime.Now;
-        string strToday = todayDate.ToString("MM/dd/yyyy h:mm tt");
-        strToday = strToday.Replace("/", "-");
-        string audioID = FirebaseAuth.DefaultInstance.CurrentUser.DisplayName + "/Audios" + "/" + strToday + ".mp3";
         tempRef = storageRef.Child(audioID);
+           
         var newMetadata = new MetadataChange();
         newMetadata.ContentType = "audio/mp3";
 
-        await tempRef.PutBytesAsync(audioBytes, newMetadata).ContinueWithOnMainThread((task) => {
+        await tempRef.PutBytesAsync(audioBytes, newMetadata).ContinueWithOnMainThread((task) =>
+        {
             if (task.IsFaulted || task.IsCanceled)
             {
                 Debug.Log(task.Result);
@@ -165,27 +222,24 @@ public class CustomizeCard : MonoBehaviour
             }
         });
 
-        await tempRef.GetDownloadUrlAsync().ContinueWithOnMainThread(task => {
+        await tempRef.GetDownloadUrlAsync().ContinueWithOnMainThread(task =>
+        {
             if (!task.IsFaulted && !task.IsCanceled)
             {
                 streamLink = task.Result.ToString();
-                Debug.Log("Download URL: " + streamLink);
-                generateQR(streamLink);
-                QRCode.texture = QrCodeTexture;
-                Debug.Log(texttt);
-
-                StartCoroutine(takeScreenshot());                
-                testImage.texture = Card;
+                Debug.Log("Download URL: " + streamLink);                
             }
         });
+
+        StartCoroutine(takeScreenshot());
+
+        SceneManager.LoadScene("LibraryPage");
     }
 
-    private string texttt;
 
-    private void generateQR(string url)
+    /*private void generateQR(string url)
     {
         string text = "THISISAUDIO + " + url;
-        texttt = text;
         QrCodeTexture = new Texture2D(256, 256);
         var color32 = Encode(text, QrCodeTexture.width, QrCodeTexture.height);
         QrCodeTexture.SetPixels32(color32);
@@ -204,15 +258,20 @@ public class CustomizeCard : MonoBehaviour
             }
         };
         return writer.Write(textForEncoding);
-    }
+    }*/
 
-    public Texture2D Card;
+
 
     private IEnumerator takeScreenshot()
     {
         yield return new WaitForEndOfFrame();
-        Card = new Texture2D(800, 800, TextureFormat.RGB24, false);
-        Card.ReadPixels(new Rect(140, 847, 800, 800), 0, 0);
+        float width = Screen.width / (float)7.71428571429;
+        float height = Screen.height / (float)2.26682408501;
+
+        int xSize = (int) (Screen.width / 1.35);
+        int ySize = (int) (Screen.height / 2.4);
+        Card = new Texture2D(xSize, ySize, TextureFormat.RGB24, false);
+        Card.ReadPixels(new Rect(width, height , xSize, ySize), 0, 0);
         Card.Apply();
 
         byte[] bytearray = Card.EncodeToPNG();

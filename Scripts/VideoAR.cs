@@ -9,6 +9,9 @@ using Firebase.Extensions;
 using Firebase.Storage;
 using Firebase.Firestore;
 
+using ZXing;
+using ZXing.QrCode;
+
 public class VideoAR : MonoBehaviour
 {
     public GameObject videoCodePanel;
@@ -22,8 +25,12 @@ public class VideoAR : MonoBehaviour
 
     FirebaseFirestore db;
 
+    private WebCamTexture camTexture;
+    private Rect screenRect;
+
     void Awake()
     {
+        //Firebase
         db = FirebaseFirestore.DefaultInstance;
         DontDestroyOnLoad(this);
     }
