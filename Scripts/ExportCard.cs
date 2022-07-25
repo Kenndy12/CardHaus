@@ -6,6 +6,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 using Firebase;
 using Firebase.Firestore;
@@ -17,6 +18,7 @@ public class ExportCard : MonoBehaviour
 {
     public string templateLink;
     public string templateName;
+    public string customizeSceneName;
 
     public RawImage image;
     private Texture2D texture;
@@ -49,6 +51,11 @@ public class ExportCard : MonoBehaviour
             texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
             image.texture = texture;
         }
+    }
+
+    public void customizeClicked()
+    {
+        SceneManager.LoadScene(customizeSceneName);
     }
 
     public void callExport()

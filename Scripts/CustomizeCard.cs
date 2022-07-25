@@ -24,18 +24,20 @@ using ZXing.QrCode;
 public class CustomizeCard : MonoBehaviour
 {
     public string templateLink;
+    public string templateName;
 
     public RawImage image;
     private Texture2D texture;
 
     public GameObject cardDetailPage;
-    public GameObject cardCustomizePage;
+    public GameObject cardStylePage;
 
     public TMP_Text mainText;
     public TMP_Text subText;
 
     public TMP_InputField mainTextField;
     public TMP_InputField subTextField;
+    public TMP_InputField cardNameField;
     public TMP_Text warningMessage;
 
     private byte[] audioBytes;
@@ -45,14 +47,18 @@ public class CustomizeCard : MonoBehaviour
     private bool CallingUploadAudio = false;
     private string audioID;
     private string audioName;
-    /*
-    private Texture2D QrCodeTexture;
-    public RawImage QRCode;
-    public GameObject QRCodeActiveOrNot;*/
+
     private Texture2D Card;
 
     public GameObject renameAudioField;
     public TMP_InputField audioNameField;
+
+    public GameObject optionPanel;
+
+    private bool finishUpload = false;
+    private bool saveAndUpload = false;
+
+    private byte[] bytearray;
 
     //Firebase
     FirebaseStorage storage;
@@ -74,8 +80,12 @@ public class CustomizeCard : MonoBehaviour
     {
         if(!fileExist && CallingUploadAudio)
         {
-            uploadAudio();
+            showOptionPanel();
             CallingUploadAudio = false;
+        }
+        if(finishUpload)
+        {
+            SceneManager.LoadScene("LibraryPage");
         }
     }
     IEnumerator DownloadImage()
@@ -95,7 +105,7 @@ public class CustomizeCard : MonoBehaviour
     public void customizeClicked()
     {
         cardDetailPage.SetActive(false);
-        cardCustomizePage.SetActive(true);
+        cardStylePage.SetActive(true);
     }
 
     public void changeMainText()
@@ -170,10 +180,14 @@ public class CustomizeCard : MonoBehaviour
         }
         else
         {
-            StartCoroutine(takeScreenshot());
-        }
+            showOptionPanel();
+            //StartCoroutine(takeScreenshot());
+        }     
+    }
 
-       
+    public void showOptionPanel()
+    {
+        optionPanel.SetActive(true);
     }
 
     private void checkFileExist()
@@ -245,60 +259,140 @@ public class CustomizeCard : MonoBehaviour
             }
         });
 
-        StartCoroutine(takeScreenshot());
-
-        SceneManager.LoadScene("LibraryPage");
-    }
-
-
-    /*private void generateQR(string url)
-    {
-        string text = "THISISAUDIO + " + url;
-        QrCodeTexture = new Texture2D(256, 256);
-        var color32 = Encode(text, QrCodeTexture.width, QrCodeTexture.height);
-        QrCodeTexture.SetPixels32(color32);
-        QrCodeTexture.Apply();
-    }
-
-    private static Color32[] Encode(string textForEncoding,int width, int height)
-    {
-        var writer = new BarcodeWriter
+        if(saveAndUpload)
         {
-            Format = BarcodeFormat.QR_CODE,
-            Options = new QrCodeEncodingOptions
-            {
-                Height = height,
-                Width = width
-            }
-        };
-        return writer.Write(textForEncoding);
-    }*/
+            StartCoroutine(saveAndUploadFunc());
+        }
+        else
+        {
+            StartCoroutine(upload());
+        }
+    }
 
-
-
-    private IEnumerator takeScreenshot()
+    public void yesClicked()
     {
+        saveAndUpload = true;
+        optionPanel.SetActive(false);
+        if(audioBytes==null)
+        {
+            StartCoroutine(saveAndUploadFunc());
+        }
+        else
+        {
+            uploadAudio();
+        }
+    }
+
+    public void noClicked()
+    {
+        saveAndUpload = false;
+        optionPanel.SetActive(false);
+        if (audioBytes == null)
+        {
+            StartCoroutine(upload());
+        }
+        else
+        {
+            uploadAudio();
+        }
+    }
+
+    private IEnumerator upload()
+    {
+        yield return new WaitForEndOfFrame();
+
         yield return new WaitForEndOfFrame();
         float width = Screen.width / (float)7.71428571429;
         float height = Screen.height / (float)2.26682408501;
 
-        int xSize = (int) (Screen.width / 1.35);
-        int ySize = (int) (Screen.height / 2.4);
+        int xSize = (int)(Screen.width / 1.35);
+        int ySize = (int)(Screen.height / 2.4);
+        Card = new Texture2D(xSize, ySize, TextureFormat.RGB24, false);
+        Card.ReadPixels(new Rect(width, height, xSize, ySize), 0, 0);
+        Card.Apply();
+
+        bytearray = Card.EncodeToPNG();
+
+        uploadToDatabase();
+    }
+
+    private IEnumerator saveAndUploadFunc()
+    {
+        
+        yield return new WaitForEndOfFrame();
+        float width = Screen.width / (float)4.46428571429;
+        float height = Screen.height / (float)1.87;
+
+        int xSize = (int) (Screen.width / 1.8);
+        int ySize = (int) (Screen.height / 3);
         Card = new Texture2D(xSize, ySize, TextureFormat.RGB24, false);
         Card.ReadPixels(new Rect(width, height , xSize, ySize), 0, 0);
         Card.Apply();
 
-        byte[] bytearray = Card.EncodeToPNG();
-        System.IO.File.WriteAllBytes(Application.dataPath + "/hehe.png", bytearray);
-        Debug.Log(Application.dataPath + "/hehe.png");
+        bytearray = Card.EncodeToPNG();
 
         // Save the screenshot to Gallery/Photos
         NativeGallery.Permission permission = NativeGallery.SaveImageToGallery(Card, "CardHausGallery", 
-            "SavedCard.png", (success, path) => Debug.Log("Media save result: " + success + " " + path));
-
-
+            templateName + ".png", (success, path) => Debug.Log("Media save result: " + success + " " + path));
         Debug.Log("Permission result: " + permission);
-    }
+        Debug.Log("saving to gallery");
+        uploadToDatabase();       
+    }  
 
-   
+    private async void uploadToDatabase()
+    {
+        string cardName;
+
+        if(cardNameField.text != null)
+        {
+            cardName = cardNameField.text;
+        }
+        else
+        {
+            cardName = cardNameField.placeholder.GetComponent<Text>().text;
+        }
+
+        //Save to firebase storage
+        string imageID = "UserTemplates/" + FirebaseAuth.DefaultInstance.CurrentUser.DisplayName + "/" + cardNameField.text + ".jpeg";
+        tempRef = storageRef.Child(imageID);
+        var newMetadata = new MetadataChange();
+        newMetadata.ContentType = "image/jpeg";
+
+        await tempRef.PutBytesAsync(bytearray, newMetadata).ContinueWithOnMainThread((task) => {
+            if (task.IsFaulted || task.IsCanceled)
+            {
+                Debug.Log(task.Result);
+                Debug.Log(task.Exception.ToString());
+            }
+            else
+            {
+                Debug.Log(task.Result);
+                Debug.Log("File Uploaded Successfully!");
+            }
+        });
+
+        //Save to firebase firestore
+        string downloadLink;
+
+        await tempRef.GetDownloadUrlAsync().ContinueWithOnMainThread(task => {
+            if (!task.IsFaulted && !task.IsCanceled)
+            {
+                downloadLink = task.Result.ToString();
+                Debug.Log("Download URL: " + downloadLink);
+                DocumentReference docRef = db.Collection("UserTemplates").Document();
+                Dictionary<string, object> template = new Dictionary<string, object>
+                {
+                    {"cardName", cardName},
+                    {"userID",FirebaseAuth.DefaultInstance.CurrentUser.UserId},
+                    {"isVideoAR", false},
+                    {"imageLink", downloadLink },
+                };
+                docRef.SetAsync(template).ContinueWithOnMainThread(task => {
+                    Debug.Log("Added document to the collection.");
+                });
+            }
+        });
+
+        finishUpload = true;
+    }
 }

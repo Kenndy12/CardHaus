@@ -40,11 +40,6 @@ public class AppManager : MonoBehaviour
 
     }
 
-    public void openCustomizingPage()
-    {
-        SceneManager.LoadScene("UserUploadVideoPage");
-    }
-
     public void openAccountSetting()
     {
         if (FirebaseAuth.DefaultInstance.CurrentUser.DisplayName == "")

@@ -30,6 +30,11 @@ public class UploadVideoScript : MonoBehaviour
     FirebaseFirestore db;
 
     public TMP_Text resultText;
+    public TMP_InputField cardNameField;
+
+    public string imageLink;
+    private string cardName;
+
     public static string downloadLink;
 
     byte[] videoBytes;
@@ -91,16 +96,29 @@ public class UploadVideoScript : MonoBehaviour
             // Read the bytes of the first file via FileBrowserHelpers
             // Contrary to File.ReadAllBytes, this function works on Android 10+, as well
             videoBytes = FileBrowserHelpers.ReadBytesFromFile(FileBrowser.Result[0]);
-            resultText.text = "Success";
+            resultText.text = "Video successfully loaded";
         }
     }
 
-    public async void  uploadFile()
+    public void uploadClicked()
+    {     
+        if(cardNameField.text!="")
+        {
+            cardName = cardNameField.text;
+            uploadFile();
+        }
+        else
+        {
+            resultText.text = "Please enter a card name";
+        }
+    }
+
+    public async void uploadFile()
     {
         var todayDate = DateTime.Now;
         string strToday = todayDate.ToString("MM/dd/yyyy h:mm tt");
         strToday = strToday.Replace("/", "-");
-        string videoID = FirebaseAuth.DefaultInstance.CurrentUser.DisplayName + "/" + strToday + ".mp4";
+        string videoID = "Videos/" + FirebaseAuth.DefaultInstance.CurrentUser.DisplayName + "/" + strToday + ".mp4";
         tempRef = storageRef.Child(videoID);
         var newMetadata = new MetadataChange();
         newMetadata.ContentType = "video/mp4";
@@ -123,10 +141,14 @@ public class UploadVideoScript : MonoBehaviour
             {
                 downloadLink = task.Result.ToString();
                 Debug.Log("Download URL: " + downloadLink);
-                DocumentReference docRef = db.Collection("UserVideos").Document();
+                DocumentReference docRef = db.Collection("UserTemplates").Document();
                 Dictionary<string, object> template = new Dictionary<string, object>
                 {
-                    { "videoLink", downloadLink },
+                    {"cardName", cardName},
+                    {"userID",FirebaseAuth.DefaultInstance.CurrentUser.UserId},
+                    {"isVideoAR", true},
+                    {"imageLink", imageLink },
+                    {"videoLink", downloadLink },
                 };
                 docRef.SetAsync(template).ContinueWithOnMainThread(task => {
                 Debug.Log("Added document to the collection.");

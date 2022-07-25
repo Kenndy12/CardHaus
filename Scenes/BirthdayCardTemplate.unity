@@ -2161,9 +2161,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 641758427}
-        m_TargetAssemblyTypeName: AppManager, Assembly-CSharp
-        m_MethodName: openCustomizingPage
+      - m_Target: {fileID: 1997364048}
+        m_TargetAssemblyTypeName: ExportCard, Assembly-CSharp
+        m_MethodName: customizeClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4741,6 +4741,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   templateLink: https://firebasestorage.googleapis.com/v0/b/cardhaus-1ed70.appspot.com/o/CardHausTemplate%2FBirthday%20Card?alt=media
   templateName: Birthday Card
+  customizeSceneName: BirthdayARUpload
   image: {fileID: 1295680028}
   saveConfirmPanel: {fileID: 1122195075}
 --- !u!4 &1997364049

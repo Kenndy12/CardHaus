@@ -91,7 +91,7 @@ public class VideoAR : MonoBehaviour
     {
         videoCode = videoCodeField.text;
 
-        DocumentReference docRef = db.Collection("UserVideos").Document(videoCode);
+        DocumentReference docRef = db.Collection("UserTemplates").Document(videoCode);
         docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
             DocumentSnapshot snapshot = task.Result;
