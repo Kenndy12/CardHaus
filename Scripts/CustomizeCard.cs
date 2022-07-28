@@ -302,11 +302,11 @@ public class CustomizeCard : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         yield return new WaitForEndOfFrame();
-        float width = Screen.width / (float)7.71428571429;
-        float height = Screen.height / (float)2.26682408501;
+        float width = Screen.width / (float)4.46428571429;
+        float height = Screen.height / (float)1.625;
 
-        int xSize = (int)(Screen.width / 1.35);
-        int ySize = (int)(Screen.height / 2.4);
+        int xSize = (int)(Screen.width / 1.8);
+        int ySize = (int)(Screen.height / 2.8);
         Card = new Texture2D(xSize, ySize, TextureFormat.RGB24, false);
         Card.ReadPixels(new Rect(width, height, xSize, ySize), 0, 0);
         Card.Apply();
@@ -321,10 +321,10 @@ public class CustomizeCard : MonoBehaviour
         
         yield return new WaitForEndOfFrame();
         float width = Screen.width / (float)4.46428571429;
-        float height = Screen.height / (float)1.87;
+        float height = Screen.height / (float)1.625;
 
         int xSize = (int) (Screen.width / 1.8);
-        int ySize = (int) (Screen.height / 3);
+        int ySize = (int) (Screen.height / 2.8);
         Card = new Texture2D(xSize, ySize, TextureFormat.RGB24, false);
         Card.ReadPixels(new Rect(width, height , xSize, ySize), 0, 0);
         Card.Apply();
@@ -380,6 +380,7 @@ public class CustomizeCard : MonoBehaviour
                 downloadLink = task.Result.ToString();
                 Debug.Log("Download URL: " + downloadLink);
                 DocumentReference docRef = db.Collection("UserTemplates").Document();
+                Debug.Log(cardName);
                 Dictionary<string, object> template = new Dictionary<string, object>
                 {
                     {"cardName", cardName},
