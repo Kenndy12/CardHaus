@@ -9,9 +9,6 @@ using Firebase.Extensions;
 using Firebase.Storage;
 using Firebase.Firestore;
 
-using ZXing;
-using ZXing.QrCode;
-
 public class VideoAR : MonoBehaviour
 {
     //Video Code Panel
@@ -22,12 +19,14 @@ public class VideoAR : MonoBehaviour
     private string videoLink;
 
     //Model AR Panel
-    public GameObject modelArPanel;
+    public GameObject audioPanel;
     private bool finishGettingAudio = false;
     public TMP_Dropdown audioDropdown;
 
     private GameObject ARVideoPlane;
     private ARVideoBehaviour ARBehaviour;
+
+    public GameObject ARModePanel;
 
     //Audio
     public int optionChosen = 0;
@@ -79,12 +78,19 @@ public class VideoAR : MonoBehaviour
 
     public void modelArClicked()
     {
-        modelArPanel.SetActive(true);
+        if (ARModePanel.activeSelf)
+        {
+            ARModePanel.SetActive(false);
+        }
+        else
+        {
+            ARModePanel.SetActive(true);
+        }
     }
 
     public void deactiveModelPanel()
     {
-        modelArPanel.SetActive(false);
+        audioPanel.SetActive(false);
     }
 
     public void enterVideoClicked()

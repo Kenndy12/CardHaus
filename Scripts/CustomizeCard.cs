@@ -194,7 +194,8 @@ public class CustomizeCard : MonoBehaviour
     {
         if (audioNameField.text != "")
         {
-            audioID = "/Audios/" + audioNameField.text + ".mp3";
+            string audioName = audioNameField.text.Replace(" ","");
+            audioID = "/Audios/" + audioName + ".mp3";
             checkIfFileExist = storageRef.Child(audioID);
             //Check if file exists
             checkIfFileExist.GetDownloadUrlAsync().ContinueWithOnMainThread(task => {
@@ -353,7 +354,8 @@ public class CustomizeCard : MonoBehaviour
         }
 
         //Save to firebase storage
-        string imageID = "UserTemplates/" + FirebaseAuth.DefaultInstance.CurrentUser.DisplayName + "/" + cardNameField.text + ".jpeg";
+        string imageName = cardNameField.text.Replace(" ","");
+        string imageID = "UserTemplates/" + FirebaseAuth.DefaultInstance.CurrentUser.DisplayName + "/" + imageName + ".jpeg";
         tempRef = storageRef.Child(imageID);
         var newMetadata = new MetadataChange();
         newMetadata.ContentType = "image/jpeg";
@@ -379,8 +381,10 @@ public class CustomizeCard : MonoBehaviour
             {
                 downloadLink = task.Result.ToString();
                 Debug.Log("Download URL: " + downloadLink);
+                int index = downloadLink.IndexOf("&token");
+                if (index >= 0)
+                    downloadLink = downloadLink.Substring(0, index);
                 DocumentReference docRef = db.Collection("UserTemplates").Document();
-                Debug.Log(cardName);
                 Dictionary<string, object> template = new Dictionary<string, object>
                 {
                     {"cardName", cardName},

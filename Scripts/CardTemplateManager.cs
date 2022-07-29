@@ -114,7 +114,6 @@ public class CardTemplateManager : MonoBehaviour
 
     public void instantiateArray()
     {
-        Debug.Log("gety");
         GameObject buttonTemplate = transform.GetChild(0).gameObject;
         GameObject g;
         for (int i = 0; i < length; i++)
@@ -123,13 +122,6 @@ public class CardTemplateManager : MonoBehaviour
             
             g = Instantiate(buttonTemplate, transform);
             g.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tmp.cardName;
-
-            
-            /*else
-            {
-                g.transform.GetChild(2).GetComponent<GameObject>().SetActive(false);
-            }*/
-
             StartCoroutine(DownloadImage(tmp, g.transform.GetChild(1).GetComponent<RawImage>()));
 
             if (tmp.isVideoTemplate)

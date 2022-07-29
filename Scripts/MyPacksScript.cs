@@ -80,7 +80,7 @@ public class MyPacksScript : MonoBehaviour
             tmp.docID = (string)documentSnapshot.Id;
             tmp.cardName = (string)documentDictionary["cardName"];
             tmp.userID = (string)documentDictionary["userID"];
-            tmp.imageURL = (string)documentDictionary["imageLink"];
+            tmp.imageURL = (string)documentDictionary["imageLink"];          
             tmp.isVideoTemplate = (bool)documentDictionary["isVideoAR"];
 
             if (tmp.isVideoTemplate)
@@ -99,6 +99,7 @@ public class MyPacksScript : MonoBehaviour
 
     IEnumerator DownloadImage(userTemplate tmp, RawImage m)
     {
+        Debug.Log(tmp.imageURL);
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(tmp.imageURL);
         yield return request.SendWebRequest();
         if (request.isNetworkError || request.isHttpError)
