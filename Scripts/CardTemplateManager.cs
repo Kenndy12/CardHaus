@@ -91,7 +91,7 @@ public class CardTemplateManager : MonoBehaviour
 
     public async void insertIntoTemplateArray()
     {
-        Query allCitiesQuery = db.Collection("CardHausTemplate");
+        Query allCitiesQuery = db.Collection("CardHausTemplate").OrderByDescending("isVideoCard");
         QuerySnapshot allCitiesQuerySnapshot = await allCitiesQuery.GetSnapshotAsync();
 
         foreach (DocumentSnapshot documentSnapshot in allCitiesQuerySnapshot.Documents)
@@ -143,15 +143,37 @@ public class CardTemplateManager : MonoBehaviour
             case 0:
                 if (checkLoggedIn())
                 {
-                    SceneManager.LoadScene("BirthdayCardTemplate");
+                    SceneManager.LoadScene("NewYearVideoCardTemplate");
+                }
+                else
+                {
+                    callWarningPanel();
+                }
+                break;
+            case 1:
+                if (checkLoggedIn())
+                {
+                    SceneManager.LoadScene("BirthdayVideoCardTemplate");
                 }
                 else
                 {
                     callWarningPanel();
                 }                             
                 break;
-            case 1:
+            case 2:
+                SceneManager.LoadScene("WeddingCard");
+                break;
+            case 3:
                 SceneManager.LoadScene("NewYearCard");
+                break;
+            case 4:
+                SceneManager.LoadScene("DeepvaliCard");
+                break;
+            case 5:
+                SceneManager.LoadScene("ChristmasCard");
+                break;
+            case 6:
+                SceneManager.LoadScene("BirthdayCard");
                 break;
         }
     }

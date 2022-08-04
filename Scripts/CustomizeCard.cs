@@ -207,8 +207,17 @@ public class CustomizeCard : MonoBehaviour
                 else
                 {
                     audioName = audioNameField.text;
-                    CallingUploadAudio = true;
-                    fileExist = false;
+                    if(cardNameField.text != "")
+                    {
+                        CallingUploadAudio = true;
+                        fileExist = false;
+                    }
+                    else if(cardNameField.text == "")
+                    {
+                        warningMessage.text = "Card name cannot be empty";
+                        Debug.Log("dsad");
+                    }
+                   
                 }
             });
         }

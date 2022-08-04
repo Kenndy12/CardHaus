@@ -12,6 +12,8 @@ public class CardStyleChooser : MonoBehaviour
     private Texture option1Tex;
     private Texture option2Tex;
 
+    public GameObject detailPanels;
+
     public GameObject option1Panel;
     public GameObject option2Panel;
 
@@ -55,6 +57,19 @@ public class CardStyleChooser : MonoBehaviour
             option2Panel.SetActive(true);
             thisPanel.SetActive(false);
         }
+    }
+
+    public void backClicked()
+    {
+        detailPanels.SetActive(true);
+        thisPanel.SetActive(false); ;
+    }
+
+    public void backToChooser()
+    {
+        thisPanel.SetActive(true);
+        option1Panel.SetActive(false);
+        option2Panel.SetActive(false);
     }
 
 }
