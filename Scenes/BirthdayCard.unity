@@ -10633,6 +10633,7 @@ MonoBehaviour:
   templateLink: https://firebasestorage.googleapis.com/v0/b/cardhaus-1ed70.appspot.com/o/CardHausTemplate%2FBirthday%20Card%20Style%201%20No%20Text.png?alt=media
   templateName: Birthday Card 1
   image: {fileID: 1976490443}
+  warningPanel: {fileID: 904652704}
   cardDetailPage: {fileID: 1082764634}
   cardStylePage: {fileID: 4422159}
   mainText: {fileID: 2071338562}
@@ -14189,13 +14190,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 961658996}
+        m_TargetAssemblyTypeName: AppManager, Assembly-CSharp
+        m_MethodName: acknowlegdeError
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -17988,6 +17989,7 @@ MonoBehaviour:
   templateLink: https://firebasestorage.googleapis.com/v0/b/cardhaus-1ed70.appspot.com/o/CardHausTemplate%2FBirthday%20Card%20Style%202%20No%20Text.jpeg?alt=media
   templateName: Birthday Card 2
   image: {fileID: 357297164}
+  warningPanel: {fileID: 0}
   cardDetailPage: {fileID: 1082764634}
   cardStylePage: {fileID: 4422159}
   mainText: {fileID: 505026122}
@@ -19731,13 +19733,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 961658996}
+        m_TargetAssemblyTypeName: AppManager, Assembly-CSharp
+        m_MethodName: openLoginScreen
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

@@ -207,13 +207,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 1869250430}
+        m_TargetAssemblyTypeName: AppManager, Assembly-CSharp
+        m_MethodName: openLoginScreen
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1201,13 +1201,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 1869250430}
+        m_TargetAssemblyTypeName: AppManager, Assembly-CSharp
+        m_MethodName: acknowlegdeError
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -17982,7 +17982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acc767a5263372c42b734a25ab9a6256, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  warningPanel: {fileID: 0}
+  warningPanel: {fileID: 1527195546}
 --- !u!4 &1869250431
 Transform:
   m_ObjectHideFlags: 0
@@ -19336,6 +19336,7 @@ MonoBehaviour:
   templateLink: https://firebasestorage.googleapis.com/v0/b/cardhaus-1ed70.appspot.com/o/CardHausTemplate%2FWedding%20Card%20Style%202%20No%20Text.png?alt=media
   templateName: Wedding Card 2
   image: {fileID: 1799846991}
+  warningPanel: {fileID: 0}
   cardDetailPage: {fileID: 61628932}
   cardStylePage: {fileID: 1131488297}
   mainText: {fileID: 175032664}
@@ -20018,6 +20019,7 @@ MonoBehaviour:
   templateLink: https://firebasestorage.googleapis.com/v0/b/cardhaus-1ed70.appspot.com/o/CardHausTemplate%2FWedding%20Card%20Style%201%20No%20Text.png?alt=media
   templateName: Wedding Card 1
   image: {fileID: 1895452781}
+  warningPanel: {fileID: 1527195546}
   cardDetailPage: {fileID: 61628932}
   cardStylePage: {fileID: 1131488297}
   mainText: {fileID: 1863987052}

@@ -1657,7 +1657,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acc767a5263372c42b734a25ab9a6256, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  warningPanel: {fileID: 0}
+  warningPanel: {fileID: 1175295775}
 --- !u!4 &146728907
 Transform:
   m_ObjectHideFlags: 0
@@ -5314,13 +5314,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 146728906}
+        m_TargetAssemblyTypeName: AppManager, Assembly-CSharp
+        m_MethodName: acknowlegdeError
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -16981,6 +16981,7 @@ MonoBehaviour:
   templateLink: https://firebasestorage.googleapis.com/v0/b/cardhaus-1ed70.appspot.com/o/CardHausTemplate%2FMerry%20Christmas%20Card%20Style%202%20No%20Text.png?alt=media
   templateName: Christmas Card 2
   image: {fileID: 740085013}
+  warningPanel: {fileID: 0}
   cardDetailPage: {fileID: 1776692483}
   cardStylePage: {fileID: 155866551}
   mainText: {fileID: 1033976970}
@@ -17562,6 +17563,7 @@ MonoBehaviour:
   templateLink: https://firebasestorage.googleapis.com/v0/b/cardhaus-1ed70.appspot.com/o/CardHausTemplate%2FMerry%20Christmas%20Card%20Style%201%20No%20Text.png?alt=media
   templateName: Christmas Card 1
   image: {fileID: 1812876206}
+  warningPanel: {fileID: 1175295775}
   cardDetailPage: {fileID: 1776692483}
   cardStylePage: {fileID: 155866551}
   mainText: {fileID: 206304564}
@@ -18944,13 +18946,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 146728906}
+        m_TargetAssemblyTypeName: AppManager, Assembly-CSharp
+        m_MethodName: openLoginScreen
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

@@ -4739,7 +4739,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7060fdad12ede8244afdbc8f2ac8f6e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  templateLink: https://firebasestorage.googleapis.com/v0/b/cardhaus-1ed70.appspot.com/o/CardHausTemplate%2FBirthday%20Card?alt=media
+  templateLink: https://firebasestorage.googleapis.com/v0/b/cardhaus-1ed70.appspot.com/o/CardHausTemplate%2FBirthdayVideoCard?alt=media
   templateName: Birthday Card
   customizeSceneName: BirthdayARUpload
   image: {fileID: 1295680028}

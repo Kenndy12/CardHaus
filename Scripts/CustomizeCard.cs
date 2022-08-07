@@ -29,6 +29,8 @@ public class CustomizeCard : MonoBehaviour
     public RawImage image;
     private Texture2D texture;
 
+    public GameObject warningPanel;
+
     public GameObject cardDetailPage;
     public GameObject cardStylePage;
 
@@ -104,8 +106,15 @@ public class CustomizeCard : MonoBehaviour
 
     public void customizeClicked()
     {
-        cardDetailPage.SetActive(false);
-        cardStylePage.SetActive(true);
+        if (FirebaseAuth.DefaultInstance.CurrentUser.DisplayName == "")
+        {
+            warningPanel.SetActive(true);
+        }
+        else
+        {
+            cardDetailPage.SetActive(false);
+            cardStylePage.SetActive(true);
+        }
     }
 
     public void changeMainText()
@@ -180,7 +189,15 @@ public class CustomizeCard : MonoBehaviour
         }
         else
         {
-            showOptionPanel();
+            if (cardNameField.text != "")
+            {
+                showOptionPanel();
+            }
+            else if (cardNameField.text == "")
+            {
+                warningMessage.text = "Card name cannot be empty";
+                Debug.Log("dsad");
+            }           
             //StartCoroutine(takeScreenshot());
         }     
     }
@@ -211,6 +228,7 @@ public class CustomizeCard : MonoBehaviour
                     {
                         CallingUploadAudio = true;
                         fileExist = false;
+                        Debug.Log("This is " + cardNameField.text);
                     }
                     else if(cardNameField.text == "")
                     {
