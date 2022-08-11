@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
 
     public GameObject registerPanel;
     public GameObject loginPanel;
+    public GameObject forgetPasswordPanel;
 
     private void Awake()
     {
@@ -27,6 +28,7 @@ public class UIManager : MonoBehaviour
         {
             registerPanel.SetActive(true);
             loginPanel.SetActive(false);
+            forgetPasswordPanel.SetActive(false);
         }
     }
 
@@ -36,6 +38,17 @@ public class UIManager : MonoBehaviour
         {
             registerPanel.SetActive(false);
             loginPanel.SetActive(true);
+            forgetPasswordPanel.SetActive(false);
+        }
+    }
+
+    public void forgetPassword()
+    {
+        if (forgetPasswordPanel != null)
+        {
+            registerPanel.SetActive(false);
+            loginPanel.SetActive(false);
+            forgetPasswordPanel.SetActive(true);
         }
     }
 

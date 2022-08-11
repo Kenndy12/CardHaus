@@ -9029,8 +9029,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-    tempor incididunt.
+  m_text: A pair of doves are traditionally released after a wedding as a symbol
+    of peace.Wedding rings represent the couple's commitment within the relationship.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5a79ce744a8f74f4394cd9151f7f406d, type: 2}
   m_sharedMaterial: {fileID: 2402406379365397582, guid: 5a79ce744a8f74f4394cd9151f7f406d, type: 2}
@@ -9057,8 +9057,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 28
+  m_fontSizeBase: 28
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -10337,7 +10337,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 1017605795}
   playPauseIcon: {fileID: 1540063749}
-  videoToPlay: {fileID: 32900000, guid: d325c4a5a57f2ee4cab307eee30ae7d1, type: 3}
+  videoToPlay: {fileID: 32900000, guid: f483ebe915a7a6a47bd8d4210a266ecc, type: 3}
 --- !u!114 &1017605795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10358,7 +10358,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 65b862d22c5265440aaa02683c9a20f5, type: 3}
+  m_Texture: {fileID: 2800000, guid: 23f85d6f50c0aac44b2b298fb6b6aeb3, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0

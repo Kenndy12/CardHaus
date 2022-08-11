@@ -38,10 +38,16 @@ public class PreviewUploadedVideo : MonoBehaviour
     void Start()
     {
         videoLink = UploadVideoScript.downloadLink;
+        videoCode = UploadVideoScript.videoCode;
         Debug.Log(videoLink);
 
+        messageText.text = "Your video code is ";
+        Debug.Log("hey" + videoCode);
+        videoCodeText.text = videoCode;
+        clipboardIcon.SetActive(true);
+
         db = FirebaseFirestore.DefaultInstance;
-        getObjectID();     
+        //getObjectID();     
     }
 
     private void getObjectID()
@@ -52,6 +58,7 @@ public class PreviewUploadedVideo : MonoBehaviour
             QuerySnapshot capitalQuerySnapshot = task.Result;
             foreach (DocumentSnapshot documentSnapshot in capitalQuerySnapshot.Documents)
             {
+                Debug.Log("calling");
                 Dictionary<string, object> doc = documentSnapshot.ToDictionary();
                 if (videoLink == (string)doc["videoLink"])
                 {

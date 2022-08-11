@@ -142,6 +142,7 @@ public class VideoAR : MonoBehaviour
         {
             audio tmp = (audio)audioArray[i];
             string tmpString = tmp.audioName;
+            Debug.Log(tmpString);
             dropOptions.Add(tmpString);
         }
         audioDropdown.ClearOptions();

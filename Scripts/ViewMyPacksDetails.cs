@@ -10,6 +10,9 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
 using TMPro;
+
+using Firebase.Firestore;
+
 public class ViewMyPacksDetails : MonoBehaviour
 {
     //Informations about card
@@ -36,11 +39,13 @@ public class ViewMyPacksDetails : MonoBehaviour
     private bool isPaused = false;
     private bool firstRun = true;
 
-    
+    FirebaseFirestore db;
+
     private bool isCoroutineExecuting = false;
     // Start is called before the first frame update
     void Start()
     {
+        db = FirebaseFirestore.DefaultInstance;
         populateVariables();
         StartCoroutine(DownloadImage(previewImage, imageURL));
         tidyScene();
@@ -98,6 +103,15 @@ public class ViewMyPacksDetails : MonoBehaviour
             previewImageTexture = ((DownloadHandlerTexture)request.downloadHandler).texture;
             m.texture = previewImageTexture;
         }
+    }
+
+    public void deleteClicked()
+    {
+        DocumentReference docRef = db.Collection("UserTemplates").Document(docID);
+        docRef.DeleteAsync();
+
+        Debug.Log("deleted");
+        SceneManager.LoadScene("MyPacksPage");
     }
 
     IEnumerator playVideo()

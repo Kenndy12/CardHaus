@@ -211,7 +211,7 @@ public class CustomizeCard : MonoBehaviour
     {
         if (audioNameField.text != "")
         {
-            string audioName = audioNameField.text.Replace(" ","");
+            audioName = audioNameField.text.Replace(" ","");
             audioID = "/Audios/" + audioName + ".mp3";
             checkIfFileExist = storageRef.Child(audioID);
             //Check if file exists

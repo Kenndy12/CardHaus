@@ -31,6 +31,12 @@ public class AuthManager : MonoBehaviour
     public TMP_InputField passwordRegisterVerifyField;
     public TMP_Text warningRegisterText;
 
+    //Register Variables
+    [Header("Forget Password")]
+    public TMP_InputField emailResetField;
+
+
+
 
     private void Awake()
     {
@@ -80,7 +86,7 @@ public class AuthManager : MonoBehaviour
         passwordRegisterField.text = "";
         passwordRegisterVerifyField.text = "";
         warningRegisterText.text = "";
-}
+    }
 
     //Function for login
     public void loginButton()
@@ -94,6 +100,27 @@ public class AuthManager : MonoBehaviour
     {
         //Call the register coroutine passing the email, password, and username
         StartCoroutine(Register(emailRegisterField.text, passwordRegisterField.text, usernameRegisterField.text));
+    }
+
+    public void sendForgetPassword()
+    {
+        string email = emailResetField.text;
+
+        auth.SendPasswordResetEmailAsync(email).ContinueWith(task => {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("SendPasswordResetEmailAsync was canceled.");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError("SendPasswordResetEmailAsync encountered an error: " + task.Exception);
+                return;
+            }
+
+            Debug.Log("Password reset email sent successfully.");
+        });
+        UIManager.instance.goToLoginScreen();
     }
 
     public void continueAsGuest()

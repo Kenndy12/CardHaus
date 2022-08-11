@@ -29,6 +29,8 @@ public class UploadVideoScript : MonoBehaviour
     private StorageReference tempRef;
     FirebaseFirestore db;
 
+    public string videoCardScene;
+
     public TMP_Text resultText;
     public TMP_InputField cardNameField;
 
@@ -36,6 +38,7 @@ public class UploadVideoScript : MonoBehaviour
     private string cardName;
 
     public static string downloadLink;
+    public static string videoCode;
 
     byte[] videoBytes;
 
@@ -48,6 +51,11 @@ public class UploadVideoScript : MonoBehaviour
         storageRef = storage.GetReferenceFromUrl("gs://cardhaus-1ed70.appspot.com");
 
         db = FirebaseFirestore.DefaultInstance;
+    }
+
+    public void cancelClicked()
+    {
+        SceneManager.LoadScene(videoCardScene);
     }
 
     public void openFileExplorer()
@@ -118,6 +126,7 @@ public class UploadVideoScript : MonoBehaviour
         var todayDate = DateTime.Now;
         string strToday = todayDate.ToString("MM/dd/yyyy h:mm tt");
         strToday = strToday.Replace("/", "-");
+        strToday = strToday.Replace(" ","");
         string videoID = "Videos/" + FirebaseAuth.DefaultInstance.CurrentUser.DisplayName + "/" + strToday + ".mp4";
         tempRef = storageRef.Child(videoID);
         var newMetadata = new MetadataChange();
@@ -141,7 +150,11 @@ public class UploadVideoScript : MonoBehaviour
             {
                 downloadLink = task.Result.ToString();
                 Debug.Log("Download URL: " + downloadLink);
+
                 DocumentReference docRef = db.Collection("UserTemplates").Document();
+                int index = imageLink.IndexOf("&token");
+                if (index >= 0)
+                    imageLink = imageLink.Substring(0, index);
                 Dictionary<string, object> template = new Dictionary<string, object>
                 {
                     {"cardName", cardName},
@@ -150,6 +163,7 @@ public class UploadVideoScript : MonoBehaviour
                     {"imageLink", imageLink },
                     {"videoLink", downloadLink },
                 };
+                videoCode = docRef.Id;
                 docRef.SetAsync(template).ContinueWithOnMainThread(task => {
                 Debug.Log("Added document to the collection.");
                 });
