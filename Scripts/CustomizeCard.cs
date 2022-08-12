@@ -427,4 +427,59 @@ public class CustomizeCard : MonoBehaviour
 
         finishUpload = true;
     }
+
+    /*------------------------------------------------------------------------------------------------------*/
+
+    [Header("Add Pictures Functions")]
+
+    public RawImage customImage;
+    public GameObject customImageGameObject;
+    private Texture2D customTexture;
+    private byte[] customImageBytes;
+
+    public void openCustomImageExplorer()
+    {
+
+        FileBrowser.SetFilters(false, new FileBrowser.Filter("Images", ".jpeg", "jpg", "png"));
+
+        FileBrowser.SetExcludedExtensions(".*", ".lnk", ".tmp", ".zip", ".rar", ".exe");
+
+        FileBrowser.AddQuickLink("Users", "C:\\Users", null);
+
+        // Coroutine example
+        StartCoroutine(ShowCustomLoadDialogCoroutine());
+    }
+
+    IEnumerator ShowCustomLoadDialogCoroutine()
+    {
+
+        yield return FileBrowser.WaitForLoadDialog(FileBrowser.PickMode.FilesAndFolders, true, null, null, "Load Files and Folders", "Load");
+
+        Debug.Log(FileBrowser.Success);
+
+        if (FileBrowser.Success)
+        {
+            // Print paths of the selected files (FileBrowser.Result) (null, if FileBrowser.Success is false)
+            for (int i = 0; i < FileBrowser.Result.Length; i++)
+            {
+                Debug.Log(FileBrowser.Result[i]);
+            }
+
+            // Read the bytes of the first file via FileBrowserHelpers
+            // Contrary to File.ReadAllBytes, this function works on Android 10+, as well
+            customImageBytes = FileBrowserHelpers.ReadBytesFromFile(FileBrowser.Result[0]);
+            loadImage();
+        }    
+    }
+
+    private void loadImage()
+    {
+        customTexture = new Texture2D(2,2);
+        customTexture.LoadImage(customImageBytes);
+
+        customImage.texture = customTexture;
+        customImageGameObject.SetActive(true);
+    }
+
 }
+
