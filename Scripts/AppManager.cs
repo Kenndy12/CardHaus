@@ -57,4 +57,12 @@ public class AppManager : MonoBehaviour
         warningPanel.SetActive(false);
     }
 
+    public void openAboutUs()
+    {
+        SceneManager.LoadScene("AboutUsPage");
+    }
+    public void learnMoreClicked()
+    {
+        Application.OpenURL("https://cardhaus530463295.wordpress.com/");
+    }
 }

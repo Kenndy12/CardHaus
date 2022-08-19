@@ -110,10 +110,15 @@ public class UploadVideoScript : MonoBehaviour
 
     public void uploadClicked()
     {     
-        if(cardNameField.text!="")
+        if(videoBytes == null)
+        {
+            resultText.text = "Please enter a video";
+        }
+        else if(cardNameField.text!="")
         {
             cardName = cardNameField.text;
             uploadFile();
+            resultText.text = "";
         }
         else
         {

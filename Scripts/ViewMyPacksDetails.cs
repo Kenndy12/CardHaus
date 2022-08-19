@@ -54,7 +54,6 @@ public class ViewMyPacksDetails : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     private void populateVariables()
@@ -93,6 +92,7 @@ public class ViewMyPacksDetails : MonoBehaviour
 
     IEnumerator DownloadImage(RawImage m, string imageURL)
     {
+        Debug.Log(imageURL);
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(imageURL);
         yield return request.SendWebRequest();
         if (request.isNetworkError || request.isHttpError)

@@ -197,6 +197,7 @@ public class CustomizeCard : MonoBehaviour
             {
                 warningMessage.text = "Card name cannot be empty";
                 Debug.Log("dsad");
+                Debug.Log(cardNameField.text);
             }           
             //StartCoroutine(takeScreenshot());
         }     

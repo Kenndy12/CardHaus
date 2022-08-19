@@ -85,7 +85,6 @@ public class CardTemplateManager : MonoBehaviour
             tmp.cardImage = new Texture2D(2, 2);
             tmp.cardImage = ((DownloadHandlerTexture)request.downloadHandler).texture;
             m.texture = tmp.cardImage;
-            Debug.Log("ds");
         }
     }
 
