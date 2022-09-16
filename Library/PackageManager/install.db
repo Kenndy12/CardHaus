@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "packages": {
+    "com.ptc.vuforia.engine": {
+      "tarball": {
+        "hash": "4681e13faf59",
+        "mtime": 1656922087247,
+        "size": 234825116,
+        "localPath": "C:\\Users\\Kenndy\\Desktop\\SIM-UOW\\CSIT 321\\Apps\\CardHaus\\CardHaus\\Packages\\com.ptc.vuforia.engine-10.7.2.tgz"
+      }
+    }
+  }
+}

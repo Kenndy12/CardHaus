@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: f4e06fe01dc5c4046b0eee711ebefa99
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Brixton Sans
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 347d9e94e5edaee40ae42d7bb8029a3c, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

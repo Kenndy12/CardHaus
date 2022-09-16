@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
+  <Tracking>
+    <ImageTarget name="WeddingCardStyle2" size="20.000000 26.666666" />
+    <ImageTarget name="DeepvaliCardStyle2" size="20.000000 26.666666" />
+    <ImageTarget name="DeepvaliCardStyle1" size="20.000000 26.666666" />
+    <ImageTarget name="MerryChristmasCardStyle2" size="20.000000 26.666666" />
+    <ImageTarget name="ChristmasCardStyle1" size="20.000000 26.666666" />
+    <ImageTarget name="WeddingCardStyle1" size="20.000000 26.666666" />
+    <ImageTarget name="NewYearVideoCard" size="20.000000 26.666666" />
+    <ImageTarget name="BirthdayCardStyle2" size="20.000000 26.705202" />
+    <ImageTarget name="BirthdayCardStyle1" size="20.000000 26.666666" />
+    <ImageTarget name="BirthdayGreetingVideoCard" size="10.000000 13.333333" />
+    <ImageTarget name="NewYearCardStyle2" size="20.000000 26.666666" />
+    <ImageTarget name="NewYearCardStyle1" size="20.000000 26.666666" />
+  </Tracking>
+</QCARConfig>

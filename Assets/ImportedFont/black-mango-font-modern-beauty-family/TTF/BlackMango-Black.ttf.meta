@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: e2417177efbf06f4dbe084df20ecae07
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Black Mango
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 40e6040fca2d30549859722c7a653f03, type: 3}
+  - {fileID: 12800000, guid: a012c0a435e73bf4a840b43dbaa58259, type: 3}
+  - {fileID: 12800000, guid: 10ed41784cd060b4f9c4a9c0bb5eabef, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

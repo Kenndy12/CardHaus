@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "955632893833",
+    "project_id": "cardhaus-1ed70",
+    "storage_bucket": "cardhaus-1ed70.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:955632893833:android:13d8ffbaf0f616401deb58",
+        "android_client_info": {
+          "package_name": "com.FYP.ARGreetingPrototype"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "955632893833-juj5ka8httopsbdl6ulfijqt6nm0882q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHun59Zcu0EqdWJIKgHgYJKZFiTuL3bm0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "955632893833-juj5ka8httopsbdl6ulfijqt6nm0882q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
